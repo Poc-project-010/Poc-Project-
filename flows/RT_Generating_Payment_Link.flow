@@ -252,10 +252,11 @@
     <formulas>
         <name>For_UpdatingBookingStatus</name>
         <dataType>String</dataType>
-        <expression>CASE(
-    TEXT({!$Record.Balance_Due__c}),
-    &quot;0&quot;, &quot;Sale Agreement Executed&quot;,
-    TEXT({!$Record.Total_Paid_Amount__c}),
+        <expression>IF(
+    OR(
+        ISBLANK({!$Record.Total_Paid_Amount__c}),
+        {!$Record.Total_Paid_Amount__c} = 0
+    ),
     &quot;Token Received&quot;,
     &quot;Sale Agreement Executed&quot;
 )</expression>
