@@ -9,7 +9,7 @@ private class UNProjectControllerTest {
             Project_Type__c = 'Residential_Apartment',
             City__c = 'Chennai',
             State__c = 'Tamil Nadu',
-            Status__c = 'Active',
+            Status__c = 'Under Construction',
             Start_Date__c = Date.today().addMonths(-6),
             End_Date__c = Date.today().addMonths(18),
             Public_Description__c = 'Luxury residential high-rise community.',
@@ -21,7 +21,7 @@ private class UNProjectControllerTest {
             Project_Type__c = 'Residential_Villa',
             City__c = 'Bengaluru',
             State__c = 'Karnataka',
-            Status__c = 'Plan',
+            Status__c = 'New Launch',
             Start_Date__c = Date.today().addMonths(-2),
             End_Date__c = Date.today().addMonths(24),
             Public_Description__c = 'Exclusive gated villa estate.',
@@ -51,11 +51,15 @@ private class UNProjectControllerTest {
         );
         insert new List<Phase__c>{ phaseA, phaseB };
 
+        Id aptRtId = Schema.SObjectType.Property_Unit__c.getRecordTypeInfosByDeveloperName().get('Apartment_Flat')?.getRecordTypeId();
+        Id villaRtId = Schema.SObjectType.Property_Unit__c.getRecordTypeInfosByDeveloperName().get('Villa_Unit')?.getRecordTypeId();
+
         // Create Units under Tower Azure and Palm Enclave
         List<Property_Unit__c> units = new List<Property_Unit__c>{
             new Property_Unit__c(
                 Name = 'Unit 101',
                 Phase__c = phaseA.Id,
+                RecordTypeId = aptRtId,
                 Unit_Type__c = '2 BHK Luxury Flat',
                 Floor__c = 1,
                 BHK__c = '2 BHK',
@@ -70,6 +74,7 @@ private class UNProjectControllerTest {
             new Property_Unit__c(
                 Name = 'Unit 102',
                 Phase__c = phaseA.Id,
+                RecordTypeId = aptRtId,
                 Unit_Type__c = '3 BHK Premium Flat',
                 Floor__c = 1,
                 BHK__c = '3 BHK',
@@ -79,11 +84,27 @@ private class UNProjectControllerTest {
                 Bathrooms__c = 3,
                 Parking_Available__c = true,
                 Possession_Date__c = Date.today().addMonths(12),
+                Status__c = 'Under Offer'
+            ),
+            new Property_Unit__c(
+                Name = 'Unit 103',
+                Phase__c = phaseA.Id,
+                RecordTypeId = aptRtId,
+                Unit_Type__c = '3 BHK Premium Flat',
+                Floor__c = 2,
+                BHK__c = '3 BHK',
+                Carpet_Area__c = 1750,
+                Price__c = 13500000,
+                Facing__c = 'North',
+                Bathrooms__c = 3,
+                Parking_Available__c = true,
+                Possession_Date__c = Date.today().addMonths(12),
                 Status__c = 'Sold'
             ),
             new Property_Unit__c(
                 Name = 'Villa 01',
                 Phase__c = phaseB.Id,
+                RecordTypeId = villaRtId,
                 Unit_Type__c = '3 BHK Luxury Villa',
                 Plot_Area__c = 2400,
                 Carpet_Area__c = 2800,
@@ -172,7 +193,9 @@ private class UNProjectControllerTest {
         Assert.isNotNull(details, 'Project details should be populated');
         Assert.areEqual('Urban Serenity', details.name);
         Assert.areEqual(1, details.phases.size(), 'Should have 1 phase');
-        Assert.areEqual(2, details.phases[0].units.size(), 'Should have 2 property units');
+        Assert.areEqual(2, details.phases[0].units.size(), 'Should have exactly 2 property units (Available & Under Offer; Sold excluded)');
+        Assert.areEqual('Available', details.phases[0].units[0].status);
+        Assert.areEqual('Under Offer', details.phases[0].units[1].status);
         Assert.areEqual(2, details.amenities.size(), 'Should have exactly 2 project amenities');
     }
 
@@ -188,5 +211,18 @@ private class UNProjectControllerTest {
         Assert.isNotNull(options.stateCityMap, 'State city map should not be null');
         Assert.isTrue(options.stateCityMap.containsKey('Tamil Nadu'), 'Map should contain Tamil Nadu');
         Assert.isTrue(options.stateCityMap.get('Tamil Nadu').contains('Chennai'), 'Tamil Nadu should map to Chennai');
+    }
+
+    @IsTest
+    static void testGetCompanyContactInfo() {
+        Test.startTest();
+        Map<String, String> info = UNProjectController.getCompanyContactInfo();
+        Test.stopTest();
+
+        Assert.isNotNull(info, 'Company contact info should not be null');
+        Assert.isTrue(info.containsKey('address'), 'Should contain address');
+        Assert.isTrue(info.containsKey('phone'), 'Should contain phone');
+        Assert.isTrue(info.containsKey('email'), 'Should contain email');
+        Assert.isTrue(info.containsKey('visitorHours'), 'Should contain visitor hours');
     }
 }

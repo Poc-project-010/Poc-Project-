@@ -7,4 +7,11 @@
     <targets>
         <target>lightningCommunity__Default</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="customAddress" type="String" label="Override Address" description="Optional: Leave blank to use Custom Metadata value" />
+            <property name="customPhone" type="String" label="Override Phone" description="Optional: Leave blank to use Custom Metadata value" />
+            <property name="customEmail" type="String" label="Override Email" description="Optional: Leave blank to use Custom Metadata value" />
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

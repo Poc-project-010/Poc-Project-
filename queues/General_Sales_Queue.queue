@@ -3,7 +3,7 @@
     <description>General Queue other than chennai or Hyderbad</description>
     <doesIncludeBosses>true</doesIncludeBosses>
     <doesSendEmailToMembers>false</doesSendEmailToMembers>
-    <name>General Sales Queue</name>
+    <name>Bangalore Sales Queue</name>
     <queueMembers>
         <users>
             <user>pratheepkumar752@gmail.com</user>

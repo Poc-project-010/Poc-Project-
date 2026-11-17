@@ -66,4 +66,13 @@ public with sharing class UNProjectController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    @AuraEnabled(cacheable=true)
+    public static Map<String, String> getCompanyContactInfo() {
+        try {
+            return UNProjectService.getCompanyContactInfo();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 }

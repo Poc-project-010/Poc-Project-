@@ -64,11 +64,23 @@
     margin-bottom: 0.25rem;
 }
 
-.un-info-val {
+.un-info-val,
+.un-info-value {
     font-size: 1rem;
     color: #f8fafc;
     font-weight: 500;
     line-height: 1.5;
+}
+
+.un-contact-link {
+    color: #f8fafc;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.un-contact-link:hover {
+    color: #d09b3e;
+    text-decoration: underline;
 }
 
 .un-info-note {

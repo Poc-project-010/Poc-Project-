@@ -131,20 +131,6 @@
                     </div>
                 </div>
 
-                <!-- WhatsApp Opt-In Checkbox -->
-                <div class="un-optin-group">
-                    <label class="un-checkbox-label">
-                        <input
-                            type="checkbox"
-                            checked={whatsAppOptIn}
-                            onchange={handleWhatsAppChange}
-                            class="un-checkbox"
-                        />
-                        <span class="un-optin-text">
-                            Receive project brochure, floor plans, and pricing directly on WhatsApp.
-                        </span>
-                    </label>
-                </div>
 
                 <!-- Global Error Banner -->
                 <template if:true={serverErrorMessage}>

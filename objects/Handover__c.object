@@ -172,102 +172,10 @@
         <searchResultsAdditionalFields>Booking__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Scheduled_Inspection_Date__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Snag_Status__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>No_Dues_Certificate_Issued__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Key_Handed_Over__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Actual_Handover_Date__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
-    <fields>
-        <fullName>Booking__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <description>Linked booking agreement.</description>
-        <label>Booking</label>
-        <referenceTo>Booking__c</referenceTo>
-        <relationshipLabel>Handovers</relationshipLabel>
-        <relationshipName>Handovers</relationshipName>
-        <required>false</required>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
-        <fullName>Snag_Status__c</fullName>
-        <description>Snagging status: Inspection Scheduled, Snag List Generated, Rectification In-Progress, Cleared / Zero Defects.</description>
-        <label>Snagging Status</label>
-        <required>false</required>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>Inspection Scheduled</fullName>
-                    <default>true</default>
-                    <label>Inspection Scheduled</label>
-                </value>
-                <value>
-                    <fullName>Snag List Generated</fullName>
-                    <default>false</default>
-                    <label>Snag List Generated</label>
-                </value>
-                <value>
-                    <fullName>Rectification In-Progress</fullName>
-                    <default>false</default>
-                    <label>Rectification In-Progress</label>
-                </value>
-                <value>
-                    <fullName>Cleared / Zero Defects</fullName>
-                    <default>false</default>
-                    <label>Cleared / Zero Defects</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
-    </fields>
-    <fields>
-        <fullName>Key_Handed_Over__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Physical key box handed over to customer.</description>
-        <label>Keys Handed Over</label>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>Actual_Handover_Date__c</fullName>
-        <description>Official handover possession timestamp.</description>
-        <label>Possession Date</label>
-        <required>false</required>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Signoff_Document_URL__c</fullName>
-        <description>Customer-signed handover protocol PDF.</description>
-        <label>Handover Letter</label>
-        <required>false</required>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Url</type>
-    </fields>
-    <fields>
-        <fullName>Scheduled_Inspection_Date__c</fullName>
-        <description>Snagging walk-through date.</description>
-        <label>Inspection Date</label>
-        <required>false</required>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>No_Dues_Certificate_Issued__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Auto-checked when Booking__c.Balance_Due__c &lt;= 0.</description>
-        <label>No-Dues Clearance</label>
-        <trackHistory>true</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
 </CustomObject>

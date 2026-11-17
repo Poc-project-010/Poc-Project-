@@ -10,5 +10,6 @@ public inherited sharing class UNEnquiryDTO {
     @AuraEnabled public String bhkPreference { get; set; }
     @AuraEnabled public String locationPreference { get; set; }
     @AuraEnabled public Id projectId { get; set; }
+    @AuraEnabled public Id campaignId { get; set; }
     @AuraEnabled public Boolean whatsAppOptIn { get; set; }
 }

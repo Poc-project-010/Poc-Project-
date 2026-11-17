@@ -10,7 +10,7 @@
                 <span class="un-info-icon">📍</span>
                 <div>
                     <h5 class="un-info-label">Corporate Office</h5>
-                    <p class="un-info-value">UrbanNest Tower, 45 Grand Avenue, Guindy, Chennai, Tamil Nadu 600032</p>
+                    <p class="un-info-value">{displayAddress}</p>
                 </div>
             </div>
 
@@ -18,7 +18,7 @@
                 <span class="un-info-icon">📞</span>
                 <div>
                     <h5 class="un-info-label">Direct Lines</h5>
-                    <p class="un-info-value">+91 44 4900 1200 / +91 98400 12345</p>
+                    <p class="un-info-value"><a href={telHref} class="un-contact-link">{displayPhone}</a></p>
                 </div>
             </div>
 
@@ -26,7 +26,7 @@
                 <span class="un-info-icon">✉️</span>
                 <div>
                     <h5 class="un-info-label">Email Enquiries</h5>
-                    <p class="un-info-value">enquiries@urbannest.in / sales@urbannest.in</p>
+                    <p class="un-info-value"><a href={mailToHref} class="un-contact-link">{displayEmail}</a></p>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                 <span class="un-info-icon">🕒</span>
                 <div>
                     <h5 class="un-info-label">Visitor Hours</h5>
-                    <p class="un-info-value">Monday &ndash; Saturday: 9:30 AM &ndash; 6:30 PM (IST)</p>
+                    <p class="un-info-value">{displayVisitorHours}</p>
                 </div>
             </div>
         </div>

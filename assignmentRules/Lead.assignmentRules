@@ -1,37 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AssignmentRules xmlns="http://soap.sforce.com/2006/04/metadata">
     <assignmentRule>
-        <fullName>Test</fullName>
-        <active>false</active>
-    </assignmentRule>
-    <assignmentRule>
         <fullName>UrbanNest Location Routing</fullName>
         <active>true</active>
         <ruleEntry>
             <assignedTo>Chennai_queue</assignedTo>
             <assignedToType>Queue</assignedToType>
-            <criteriaItems>
-                <field>Lead.Location_Preference__c</field>
-                <operation>equals</operation>
-                <value>Chennai</value>
-            </criteriaItems>
+            <formula>LOWER(TRIM(Location_Preference__c)) = &quot;chennai&quot;</formula>
         </ruleEntry>
         <ruleEntry>
             <assignedTo>Hyderbad_Queue</assignedTo>
             <assignedToType>Queue</assignedToType>
-            <criteriaItems>
-                <field>Lead.Location_Preference__c</field>
-                <operation>equals</operation>
-                <value>Hyderabad</value>
-            </criteriaItems>
+            <formula>OR(LOWER(TRIM(Location_Preference__c)) = &quot;hyderabad&quot;, LOWER(TRIM(Location_Preference__c)) = &quot;hyderbad&quot;)</formula>
         </ruleEntry>
         <ruleEntry>
             <assignedTo>General_Sales_Queue</assignedTo>
             <assignedToType>Queue</assignedToType>
-            <formula>AND(
-    Location_Preference__c &lt;&gt; &quot;Chennai&quot;,
-    Location_Preference__c &lt;&gt; &quot;Hyderabad&quot;
-)</formula>
+            <formula>OR(LOWER(TRIM(Location_Preference__c)) = &quot;bangalore&quot;, LOWER(TRIM(Location_Preference__c)) = &quot;bengaluru&quot;)</formula>
         </ruleEntry>
     </assignmentRule>
 </AssignmentRules>
