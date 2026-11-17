@@ -282,7 +282,7 @@
         <inputAssignments>
             <field>Booking_Status__c</field>
             <value>
-                <elementReference>Input_Booking_Status</elementReference>
+                <stringValue>Waiting Token Payement</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>

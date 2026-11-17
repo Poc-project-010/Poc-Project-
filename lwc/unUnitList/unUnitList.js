@@ -1,14 +1,25 @@
 import { LightningElement, api, track } from 'lwc';
 
+const ALLOWED_STATUSES = new Set(['available', 'under offer']);
+
 export default class UnUnitList extends LightningElement {
     @api units = [];
     @track activeBhk = 'ALL';
 
-    get bhkTabs() {
-        if (!this.units) return [];
-        const counts = { 'ALL': this.units.length, '1 BHK': 0, '2 BHK': 0, '3 BHK': 0 };
+    get visibleUnits() {
+        if (!this.units || !Array.isArray(this.units)) return [];
+        return this.units.filter(u => {
+            const status = (u.status || '').trim().toLowerCase();
+            return ALLOWED_STATUSES.has(status);
+        });
+    }
 
-        this.units.forEach(u => {
+    get bhkTabs() {
+        const list = this.visibleUnits;
+        if (!list || list.length === 0) return [];
+        const counts = { 'ALL': list.length, '1 BHK': 0, '2 BHK': 0, '3 BHK': 0, '4 BHK': 0, '5 BHK': 0 };
+
+        list.forEach(u => {
             if (u.bhk && counts[u.bhk] !== undefined) {
                 counts[u.bhk]++;
             }
@@ -21,6 +32,13 @@ export default class UnUnitList extends LightningElement {
             { label: '3 BHK', value: '3 BHK', count: counts['3 BHK'] }
         ];
 
+        if (counts['4 BHK'] > 0) {
+            tabs.push({ label: '4 BHK', value: '4 BHK', count: counts['4 BHK'] });
+        }
+        if (counts['5 BHK'] > 0) {
+            tabs.push({ label: '5 BHK', value: '5 BHK', count: counts['5 BHK'] });
+        }
+
         return tabs.map(t => ({
             ...t,
             cssClass: this.activeBhk === t.value ? 'un-bhk-tab is-active' : 'un-bhk-tab'
@@ -28,11 +46,12 @@ export default class UnUnitList extends LightningElement {
     }
 
     get filteredUnits() {
-        if (!this.units) return [];
+        const list = this.visibleUnits;
+        if (!list || list.length === 0) return [];
         if (this.activeBhk === 'ALL') {
-            return this.units;
+            return list;
         }
-        return this.units.filter(u => u.bhk === this.activeBhk);
+        return list.filter(u => u.bhk === this.activeBhk);
     }
 
     get hasFilteredUnits() {

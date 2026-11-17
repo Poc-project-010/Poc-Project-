@@ -14,7 +14,7 @@
         <inputParameters>
             <name>amount</name>
             <value>
-                <elementReference>For_Amount</elementReference>
+                <elementReference>TokenAmount</elementReference>
                 <inputConfiguratorMode>Resource</inputConfiguratorMode>
             </value>
         </inputParameters>
@@ -136,6 +136,53 @@
         </value>
     </constants>
     <decisions>
+        <name>Decision_2</name>
+        <label>Decision 2</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>END_ELEMENT_4</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Payment_Creation</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Final_Agreed_Price__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Balance_Due__c</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Name_Phone_and_Email</targetReference>
+            </connector>
+            <label>Payment Creation</label>
+        </rules>
+        <rules>
+            <name>HandOver</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Balance_Due__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Handover_Record</targetReference>
+            </connector>
+            <label>HandOver</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Initial_Payment</name>
         <label>Initial Payment</label>
         <locationX>0</locationX>
@@ -165,6 +212,16 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
     </ends>
+    <ends>
+        <name>END_ELEMENT_3</name>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+    </ends>
+    <ends>
+        <name>END_ELEMENT_4</name>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+    </ends>
     <environments>Default</environments>
     <formulas>
         <name>For_50PercentAmount</name>
@@ -179,6 +236,11 @@
         <scale>0</scale>
     </formulas>
     <formulas>
+        <name>For_InspectionDate</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() + 1</expression>
+    </formulas>
+    <formulas>
         <name>For_PropertyStatus</name>
         <dataType>String</dataType>
         <expression>IF(
@@ -190,14 +252,12 @@
     <formulas>
         <name>For_UpdatingBookingStatus</name>
         <dataType>String</dataType>
-        <expression>IF( {!$Record.Total_Paid_Amount__c} = {!TokenAmount},
-&apos;Token Received&apos; ,
-IF({!$Record.Final_Agreed_Price__c} == {!$Record.Total_Paid_Amount__c} &amp;&amp; {!$Record.Balance_Due__c} = 0,
-&apos;Sale Agreement Executed&apos;,
-&apos;Token Received&apos; 
-)
-
-
+        <expression>CASE(
+    TEXT({!$Record.Balance_Due__c}),
+    &quot;0&quot;, &quot;Sale Agreement Executed&quot;,
+    TEXT({!$Record.Total_Paid_Amount__c}),
+    &quot;Token Received&quot;,
+    &quot;Sale Agreement Executed&quot;
 )</expression>
     </formulas>
     <interviewLabel>RT : Generating Payment Link {!$Flow.CurrentDateTime}</interviewLabel>
@@ -221,6 +281,47 @@ IF({!$Record.Final_Agreed_Price__c} == {!$Record.Total_Paid_Amount__c} &amp;&amp
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_Handover_Record</name>
+        <label>Create Handover Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_the_Booking_Status1</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Booking__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Key_Handed_Over__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>No_Dues_Certificate_Issued__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Scheduled_Inspection_Date__c</field>
+            <value>
+                <elementReference>For_InspectionDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Snag_Status__c</field>
+            <value>
+                <stringValue>Inspection Scheduled</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Handover__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
     <recordLookups>
         <name>Get_Name_Phone_and_Email</name>
         <label>Get Name Phone and Email</label>
@@ -308,26 +409,48 @@ IF({!$Record.Final_Agreed_Price__c} == {!$Record.Total_Paid_Amount__c} &amp;&amp
         </inputAssignments>
         <inputReference>$Record</inputReference>
     </recordUpdates>
+    <recordUpdates>
+        <name>Update_the_Booking_Status1</name>
+        <label>Update the Booking Status1</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>END_ELEMENT_3</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Booking_Status__c</field>
+            <value>
+                <stringValue>Under Handover</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Name_Phone_and_Email</targetReference>
+            <targetReference>Decision_2</targetReference>
         </connector>
-        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-        <filterLogic>and</filterLogic>
+        <filterLogic>or</filterLogic>
         <filters>
-            <field>Final_Agreed_Price__c</field>
-            <operator>IsNull</operator>
+            <field>Booking_Status__c</field>
+            <operator>EqualTo</operator>
             <value>
-                <booleanValue>false</booleanValue>
+                <stringValue>Waiting Token Payement</stringValue>
             </value>
         </filters>
         <filters>
             <field>Booking_Status__c</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Waiting Token Payement</stringValue>
+                <stringValue>Token Received</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Booking_Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Sale Agreement Executed</stringValue>
             </value>
         </filters>
         <object>Booking__c</object>

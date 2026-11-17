@@ -66,6 +66,9 @@ public without sharing class UNEnquiryService {
             // Do NOT create another Lead. Create a follow-up Task for the owner and inform the customer.
             Lead existingLead = duplicateLeads[0];
             createFollowUpTask(existingLead, input, projectName);
+            if (input.campaignId != null) {
+                attachCampaignMember(existingLead.Id, input.campaignId);
+            }
             return new UNEnquiryResultDTO(false, DUPLICATE_PROJECT_ENQUIRY_MSG);
         }
 
@@ -92,6 +95,10 @@ public without sharing class UNEnquiryService {
             Database.DMLOptions dml = new Database.DMLOptions();
             dml.duplicateRuleHeader.allowSave = true;
             Database.insert(newLead, dml);
+
+            if (input.campaignId != null) {
+                attachCampaignMember(newLead.Id, input.campaignId);
+            }
             return new UNEnquiryResultDTO(true, NEUTRAL_SUCCESS_MSG);
         } catch (DmlException dmlEx) {
             // Check if failure is due to a duplicate submission key race condition
@@ -255,5 +262,32 @@ public without sharing class UNEnquiryService {
             return String.join(parts, ' ');
         }
         return parts[0];
+    }
+
+    /**
+     * @description Attaches a lead as a member of a marketing campaign upon QR scan / web inquiry.
+     */
+    private static void attachCampaignMember(Id leadId, Id campaignId) {
+        if (leadId == null || campaignId == null) {
+            return;
+        }
+        try {
+            List<CampaignMember> existing = [
+                SELECT Id 
+                FROM CampaignMember 
+                WHERE CampaignId = :campaignId AND LeadId = :leadId 
+                LIMIT 1
+            ];
+            if (existing.isEmpty()) {
+                CampaignMember cm = new CampaignMember(
+                    CampaignId = campaignId,
+                    LeadId = leadId,
+                    Status = 'Responded'
+                );
+                Database.insert(cm, false);
+            }
+        } catch (Exception ex) {
+            System.debug(LoggingLevel.WARN, 'Could not attach CampaignMember: ' + ex.getMessage());
+        }
     }
 }

@@ -52,6 +52,31 @@ export default class UnProjectCard extends LightningElement {
         }
     }
 
+    get hasRibbonStatus() {
+        return Boolean(this.project && this.project.status);
+    }
+
+    get ribbonLabel() {
+        if (!this.project || !this.project.status) return '';
+        const s = this.project.status.toUpperCase();
+        if (s.includes('NEW LAUNCH')) return 'NEW LAUNCH';
+        if (s.includes('READY TO MOVE')) return 'READY TO MOVE-IN';
+        if (s.includes('HANDING OVER')) return 'HANDING OVER SOON';
+        if (s.includes('UNDER CONSTRUCTION')) return 'UNDER CONSTRUCTION';
+        if (s.includes('ONGOING')) return 'ONGOING';
+        return s;
+    }
+
+    get ribbonClass() {
+        const s = (this.project?.status || '').toLowerCase();
+        let colorModifier = 'ribbon-new-launch';
+        if (s.includes('ready to move')) colorModifier = 'ribbon-ready-move';
+        else if (s.includes('handing over')) colorModifier = 'ribbon-handing-over';
+        else if (s.includes('under construction')) colorModifier = 'ribbon-under-construction';
+        else if (s.includes('ongoing')) colorModifier = 'ribbon-ongoing';
+        return `un-corner-ribbon ${colorModifier}`;
+    }
+
     get projectTypeBadge() {
         const pt = (this.project?.projectType || '').toLowerCase();
         if (pt.includes('commercial')) return '🏢 Commercial Hub';

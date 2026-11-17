@@ -6,16 +6,14 @@ private class UNEnquiryControllerTest {
         Project__c proj = new Project__c(
             Name = 'Urban Splendor',
             City__c = 'Chennai',
-            State__c = 'Tamil Nadu',
-            Status__c = 'Active'
+            State__c = 'Tamil Nadu'
         );
         insert proj;
 
         Project__c proj2 = new Project__c(
             Name = 'Azure Heights',
             City__c = 'Bengaluru',
-            State__c = 'Karnataka',
-            Status__c = 'Active'
+            State__c = 'Karnataka'
         );
         insert proj2;
 
@@ -168,5 +166,34 @@ private class UNEnquiryControllerTest {
         negBudget.budget = -500;
         UNEnquiryResultDTO res3 = UNEnquiryController.submitEnquiry(negBudget);
         Assert.isFalse(res3.isSuccess);
+    }
+
+    @IsTest
+    static void testSubmitEnquiryWithCampaignAttribution() {
+        Campaign camp = new Campaign(
+            Name = 'Expo Hoarding Campaign',
+            IsActive = true
+        );
+        insert camp;
+
+        UNEnquiryDTO dto = new UNEnquiryDTO();
+        dto.submissionKey = 'SUB-CAMP-001';
+        dto.fullName = 'Vignesh Kumar';
+        dto.phone = '9840112233';
+        dto.email = 'vignesh.k@example.com';
+        dto.campaignId = camp.Id;
+
+        Test.startTest();
+        UNEnquiryResultDTO res = UNEnquiryController.submitEnquiry(dto);
+        Test.stopTest();
+
+        Assert.isTrue(res.isSuccess, 'Submission should succeed');
+        List<CampaignMember> cms = [
+            SELECT Id, CampaignId, LeadId, Status 
+            FROM CampaignMember 
+            WHERE CampaignId = :camp.Id
+        ];
+        Assert.areEqual(1, cms.size(), 'Should create a CampaignMember linking Lead to Campaign');
+        Assert.areEqual('Responded', cms[0].Status);
     }
 }

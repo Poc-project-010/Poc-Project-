@@ -4,13 +4,20 @@
         <div class="un-card-media">
             <img src={imageSource} alt={project.name} class="un-card-img" onerror={handleImageError} loading="lazy" />
 
+            <!-- Corner Ribbon Status Badge (New Launch / Ready to Move-In / Under Construction / Handing Over Soon) -->
+            <template if:true={hasRibbonStatus}>
+                <div class={ribbonClass}>
+                    <span>{ribbonLabel}</span>
+                </div>
+            </template>
+
             <!-- Top Left: Project Type Pill -->
             <div class="un-card-badge-left">
                 {projectTypeBadge}
             </div>
 
-            <!-- Top Right: Location Pill -->
-            <div class="un-card-badge-right">
+            <!-- Bottom Left: Location Pill -->
+            <div class="un-card-badge-location">
                 <span>📍</span> {locationBadge}
             </div>
         </div>

@@ -378,7 +378,7 @@ export default class UnProjectDetailsPage extends LightningElement {
                             bathrooms: 2,
                             parkingAvailable: true,
                             possessionDate: '2027-06-30',
-                            status: 'Reserved'
+                            status: 'Available'
                         },
                         {
                             id: 'u-301',
@@ -391,7 +391,7 @@ export default class UnProjectDetailsPage extends LightningElement {
                             bathrooms: 3,
                             parkingAvailable: true,
                             possessionDate: '2027-06-30',
-                            status: 'Sold'
+                            status: 'Under Offer'
                         }
                     ]
                 },
@@ -429,7 +429,7 @@ export default class UnProjectDetailsPage extends LightningElement {
                             bathrooms: 2,
                             parkingAvailable: true,
                             possessionDate: '2028-03-31',
-                            status: 'Occupied'
+                            status: 'Under Offer'
                         }
                     ]
                 }

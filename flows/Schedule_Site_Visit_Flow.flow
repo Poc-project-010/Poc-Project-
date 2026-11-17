@@ -805,6 +805,9 @@ UrbanNest Sales Team</stringValue>
         <connector>
             <targetReference>Decision_Driver_Found</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Screen_Flow_Fault_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Is_Driver__c</field>
@@ -958,6 +961,9 @@ UrbanNest Sales Team</stringValue>
         <connector>
             <targetReference>Update_Lead_Record_With_Vehicle</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Screen_Flow_Fault_Error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -1034,6 +1040,7 @@ UrbanNest Sales Team</stringValue>
         </inputAssignments>
         <object>Lead</object>
     </recordUpdates>
+    <runInMode>SystemModeWithoutSharing</runInMode>
     <screens>
         <name>Screen_Confirmation_Success</name>
         <label>Booking Confirmed</label>

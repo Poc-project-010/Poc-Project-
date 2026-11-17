@@ -79,10 +79,25 @@ export default class UnEnquiryForm extends LightningElement {
 
     serverProjects = [];
     submissionKey = '';
+    campaignId = '';
 
     connectedCallback() {
         this.generateSubmissionKey();
+        this.extractUrlParameters();
         this.initPreselectedFields();
+    }
+
+    extractUrlParameters() {
+        try {
+            if (typeof window !== 'undefined' && window.location && window.location.search) {
+                const params = new URLSearchParams(window.location.search);
+                if (params.has('campaignId')) {
+                    this.campaignId = params.get('campaignId');
+                }
+            }
+        } catch (e) {
+            // Safe fallback
+        }
     }
 
     initPreselectedFields() {
@@ -353,6 +368,7 @@ export default class UnEnquiryForm extends LightningElement {
             email: this.email ? this.email.trim() : null,
             locationPreference: this.locationPreference ? this.locationPreference.trim() : null,
             projectId: isValidSfId(this.selectedProjectId) ? this.selectedProjectId : null,
+            campaignId: isValidSfId(this.campaignId) ? this.campaignId : null,
             bhkPreference: this.bhkPreference || null,
             budget: this.budget ? Number(this.budget) : null,
             whatsAppOptIn: this.whatsAppOptIn
@@ -363,11 +379,18 @@ export default class UnEnquiryForm extends LightningElement {
 
             if (result && result.isSuccess) {
                 this.isSubmitted = true;
-                this.successMessage = result.message || 'Thank you for your enquiry. We will contact you shortly.';
+                this.successMessage = (result.message || 'Thank you for your enquiry. We will contact you shortly.') +
+                    ' Redirecting you to our home page...';
                 this.dispatchEvent(new CustomEvent('success', {
                     bubbles: true,
                     composed: true
                 }));
+                setTimeout(() => {
+                    if (typeof window !== 'undefined' && window.location) {
+                        const isUrbanNestPath = window.location.pathname.toLowerCase().includes('/urbannest');
+                        window.location.href = isUrbanNestPath ? '/UrbanNest' : '/';
+                    }
+                }, 2200);
             } else {
                 this.serverErrorMessage = (result && result.message) ? result.message : 'Unable to submit enquiry. Please try again.';
             }

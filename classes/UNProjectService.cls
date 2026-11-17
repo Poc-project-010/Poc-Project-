@@ -23,7 +23,7 @@ public inherited sharing class UNProjectService {
                    Public_Description__c, Strengths__c, Brochure_Content_Key__c, Total_Phases__c,
                    (SELECT Id, Name, Number_of_Units__c, Available_Units__c FROM Phases__r)
             FROM Project__c
-            WHERE Status__c IN ('Plan', 'Active', 'Closed')
+            WHERE Status__c != null
             ORDER BY CreatedDate DESC
             LIMIT :queryLimit
         ];
@@ -45,7 +45,7 @@ public inherited sharing class UNProjectService {
         String query = 'SELECT Id, Name, Project_Type__c, City__c, State__c, Status__c, Start_Date__c, End_Date__c, ' +
                        'Public_Description__c, Strengths__c, Brochure_Content_Key__c, Total_Phases__c, ' +
                        '(SELECT Id, Name, Number_of_Units__c, Available_Units__c FROM Phases__r) ' +
-                       'FROM Project__c WHERE Status__c IN (\'Plan\', \'Active\', \'Closed\') ';
+                       'FROM Project__c WHERE Status__c != null ';
 
         if (String.isNotBlank(city)) {
             query += ' AND City__c = :city ';
@@ -79,7 +79,7 @@ public inherited sharing class UNProjectService {
     }
 
     public static Integer getProjectsCount(String city, String state, String projectType) {
-        String query = 'SELECT COUNT() FROM Project__c WHERE Status__c IN (\'Plan\', \'Active\', \'Closed\') ';
+        String query = 'SELECT COUNT() FROM Project__c WHERE Status__c != null ';
         if (String.isNotBlank(city)) {
             query += ' AND City__c = :city ';
         }
@@ -176,6 +176,8 @@ public inherited sharing class UNProjectService {
 
         if (!phaseMap.isEmpty()) {
             Set<Id> phaseIds = phaseMap.keySet();
+            // Filter: Only Available and Under Offer units appear on the public website.
+            // Reserved, Sold, and Occupied units are strictly excluded from the portal view.
             List<Property_Unit__c> units = [
                 SELECT Id, Name, Phase__c, RecordType.DeveloperName, Unit_Type__c, Floor__c, BHK__c,
                        Carpet_Area__c, Super_Built_Up_Area__c, Plot_Area__c, Price__c,
@@ -183,6 +185,7 @@ public inherited sharing class UNProjectService {
                        Possession_Date__c, Status__c, Sample_Photo_Content_Key__c
                 FROM Property_Unit__c
                 WHERE Phase__c IN :phaseIds
+                  AND Status__c IN ('Available', 'Under Offer')
                 ORDER BY Floor__c ASC, Name ASC
             ];
 
@@ -256,7 +259,7 @@ public inherited sharing class UNProjectService {
         for (Project__c p : [
             SELECT City__c, State__c, Project_Type__c
             FROM Project__c
-            WHERE Status__c IN ('Plan', 'Active', 'Closed')
+            WHERE Status__c != null
         ]) {
             if (String.isNotBlank(p.City__c)) {
                 citySet.add(p.City__c);
@@ -407,5 +410,41 @@ public inherited sharing class UNProjectService {
         }
 
         return dtos;
+    }
+
+    /**
+     * @description Retrieves company contact settings from Custom Metadata Type (UrbanNest_Contact_Setting__mdt)
+     * with graceful fallback to default verified contact info.
+     */
+    public static Map<String, String> getCompanyContactInfo() {
+        Map<String, String> info = new Map<String, String>{
+            'address' => 'Level 12, Urban Horizon Center, IT Corridor, Chennai — 600096',
+            'phone' => '+91 93636 47520',
+            'phoneRaw' => '+919363647520',
+            'email' => 'contact.urbannest360@gmail.com',
+            'visitorHours' => 'Monday – Saturday: 9:30 AM – 6:30 PM (IST)'
+        };
+
+        try {
+            UrbanNest_Contact_Setting__mdt setting = UrbanNest_Contact_Setting__mdt.getInstance('Default');
+            if (setting != null) {
+                if (String.isNotBlank(setting.Address__c)) {
+                    info.put('address', setting.Address__c);
+                }
+                if (String.isNotBlank(setting.Phone_Number__c)) {
+                    info.put('phone', setting.Phone_Number__c);
+                    info.put('phoneRaw', setting.Phone_Number__c.replaceAll('[^0-9+]', ''));
+                }
+                if (String.isNotBlank(setting.Email__c)) {
+                    info.put('email', setting.Email__c);
+                }
+                if (String.isNotBlank(setting.Visitor_Hours__c)) {
+                    info.put('visitorHours', setting.Visitor_Hours__c);
+                }
+            }
+        } catch (Exception ex) {
+            // Graceful fallback to default values
+        }
+        return info;
     }
 }

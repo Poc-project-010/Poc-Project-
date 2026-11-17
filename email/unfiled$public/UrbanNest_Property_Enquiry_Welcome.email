@@ -1,0 +1,74 @@
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">
+  We’ve received your property enquiry. Here’s what happens next.
+</div>
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+       bgcolor="#f3f0ea" style="font-family:Arial,sans-serif;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+      <!--[if mso]><table role="presentation" width="600" align="center"><tr><td><![endif]-->
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+             bgcolor="#ffffff" style="max-width:600px;border:1px solid #e5dccb;">
+        <tr>
+          <td bgcolor="#d8aa45" height="5" style="font-size:1px;line-height:5px;">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:18px 20px;">
+            <img src="https://ajsd9--devsandbox.sandbox.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Jpg&amp;versionId=068C400000Bg50B&amp;operationContext=DELIVERY&amp;contentId=05TC400000GgneP&amp;page=0&amp;d=/a/C4000002osth/4OBTqlLz1kVe0FBthdKX4hcU6o9R0leQdqatUeHNIWs&amp;oid=00DC4000005kmd3&amp;dpt=null&amp;viewId="
+                 alt="UrbanNest Real Estate" width="196"
+                 style="display:block;width:196px;max-width:100%;height:auto;border:0;">
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#e8dfd0">
+            <img src="https://ajsd9--devsandbox.sandbox.file.force.com/sfc/dist/version/renditionDownload?rendition=ORIGINAL_Jpg&amp;versionId=068C400000Bg6sH&amp;operationContext=DELIVERY&amp;contentId=05TC400000GgpEp&amp;page=0&amp;d=/a/C4000002osvJ/InXPY02RlG_Ko7TIeTn8hYU7I28A_4kWW2xPNRkgICQ&amp;oid=00DC4000005kmd3&amp;dpt=null&amp;viewId="
+                 alt="Illustration of contemporary apartments with a landscaped entrance"
+                 width="600" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
+          </td>
+        </tr>
+        <tr>
+          <td align="right" bgcolor="#f7f2e8" style="padding:6px 14px;color:#534b3d;font-size:11px;">
+            Property image for illustration
+          </td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#0c2237" style="padding:30px 24px;color:#ffffff;">
+            <h1 style="margin:0 0 9px;font-size:31px;line-height:1.15;">Welcome to UrbanNest</h1>
+            <p style="margin:0;color:#f4ca72;font-size:16px;line-height:1.5;">
+              We’ve received your property enquiry.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:28px 26px;color:#26384a;font-size:16px;line-height:1.6;">
+            <p style="margin:0 0 12px;">Hi {!Lead.FirstName}{!Lead.LastName},</p>
+            <p style="margin:0 0 20px;">Thanks for exploring UrbanNest. Here’s what happens next.</p>
+            <p style="margin:0 0 8px;">
+              <strong style="color:#0c2237;">We’ll get in touch.</strong>
+              Our sales team will ask about your preferred apartment type, location and budget.
+            </p>
+            <p style="margin:0 0 20px;">
+              <strong style="color:#0c2237;">We’ll share available homes.</strong>
+              You can compare options that match your preferences.
+            </p>
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td bgcolor="#fbf4e4" style="padding:15px 17px;border-left:4px solid #d8aa45;">
+                  <strong style="color:#0c2237;">Would you like to visit a property?</strong><br>
+                  Tell us when we call, and we’ll help you arrange a site visit.
+                </td>
+              </tr>
+            </table>
+            <p style="margin:22px 0 0;">Best regards,<br><strong>The UrbanNest Team</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#0c2237" style="padding:17px 26px;color:#e4ebf1;font-size:12px;line-height:1.5;">
+            You received this email because you submitted a property enquiry on the UrbanNest website.
+          </td>
+        </tr>
+      </table>
+      <!--[if mso]></td></tr></table><![endif]-->
+    </td>
+  </tr>
+</table>
