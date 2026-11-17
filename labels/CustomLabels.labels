@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>FBAppSecert</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>FBAppSecert</shortDescription>
+        <value>203bb39fd65a5e63b437d33549cb6f96</value>
+    </labels>
+    <labels>
+        <fullName>Individual_Property_Enquiry</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Individual Property Enquiry</shortDescription>
+        <value>Individual Property Enquiry</value>
+    </labels>
+    <labels>
+        <fullName>PERMANANTWHATSAPPTOKEN</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PERMANANTWHATSAPPTOKEN</shortDescription>
+        <value>EAAZAB0UFpVwABS4N5ziOWlPKnJAcNv87KGhArNdaF0zFGJze68E8TQBAHA3OuBbjlDYEyIIib5ZACACH2uZAAL549RfhQLqDthLaD6yUy7IVoPOl8dvZBXUmZCxD9sANApv7yhQD4liLZBJOuMOgLMWF9FvXxZCPjIR1W4iLlGW4e9icSnET7YtU81694tnOfyTIAZDZD</value>
+    </labels>
+    <labels>
+        <fullName>RazorpayWebhookSecret</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RazorpayWebhookSecret</shortDescription>
+        <value>RAZORPAYSECERT</value>
+    </labels>
+</CustomLabels>
