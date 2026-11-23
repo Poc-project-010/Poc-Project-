@@ -163,7 +163,7 @@
     </nameField>
     <pluralLabel>Enrollments</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>Private</sharingModel>
     <visibility>Public</visibility>
     <fields>
         <fullName>Notes__c</fullName>

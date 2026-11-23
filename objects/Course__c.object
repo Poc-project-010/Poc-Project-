@@ -163,7 +163,7 @@
     </nameField>
     <pluralLabel>Courses</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>Private</sharingModel>
     <visibility>Public</visibility>
     <fields>
         <fullName>Title__c</fullName>

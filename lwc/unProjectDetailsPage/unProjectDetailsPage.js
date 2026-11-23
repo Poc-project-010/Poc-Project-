@@ -79,33 +79,26 @@ export default class UnProjectDetailsPage extends LightningElement {
     async loadProject() {
         this.isLoading = true;
         try {
-            if (!this.recordId || this.recordId.length < 15 || this.recordId.startsWith('sample')) {
-                try {
-                    const featured = await getFeaturedProjects({ limitCount: 1 });
-                    if (featured && featured.length > 0 && featured[0].id) {
-                        this.recordId = featured[0].id;
-                    }
-                } catch (e) {
-                    // Fall back to sample
-                }
-            }
+            const hasValidSfId = this.recordId && 
+                (this.recordId.length === 15 || this.recordId.length === 18) && 
+                !this.recordId.startsWith('sample') && 
+                !this.recordId.startsWith('proj');
 
-            if (this.recordId && this.recordId.length >= 15 && !this.recordId.startsWith('sample')) {
+            if (hasValidSfId) {
                 const data = await getProjectDetails({ projectId: this.recordId });
-                if (data) {
+                if (data && data.name) {
                     this.project = data;
                     if (data.apartments && data.apartments.length > 0) {
                         this.selectedApartmentId = data.apartments[0].id;
                     }
-                } else {
-                    this.loadSampleData();
+                    return;
                 }
-            } else {
-                this.loadSampleData();
             }
+
+            this.loadSampleData(this.recordId);
         } catch (err) {
             console.warn('Unable to load project from Apex, using sample presentation:', err);
-            this.loadSampleData();
+            this.loadSampleData(this.recordId);
         } finally {
             this.isLoading = false;
         }
@@ -284,9 +277,240 @@ export default class UnProjectDetailsPage extends LightningElement {
         }));
     }
 
-    loadSampleData() {
+    loadSampleData(identifier = '') {
+        const idLower = String(identifier || '').toLowerCase();
+
+        // 1. Urban Horizon Tech Park (Commercial, Hyderabad - Starting ₹ 3.20 Cr*)
+        if (idLower === 'sample-01' || idLower === 'proj-03' || idLower.includes('horizon') || idLower.includes('tech')) {
+            this.project = {
+                id: 'sample-01',
+                name: 'Urban Horizon Tech Park',
+                projectType: 'Commercial',
+                city: 'Hyderabad',
+                state: 'Telangana',
+                status: 'Active',
+                startDate: '2025-01-15',
+                endDate: '2027-12-31',
+                publicDescription: 'Next-generation Grade-A corporate towers and vibrant high-street retail promenade engineered for Fortune 500 enterprises and luxury brands in HITEC City.',
+                strengths: 'LEED Platinum Certified, Double-Glazed Acoustic Façade, High-Speed Destination Lifts, 100% DG Power Backup, Rooftop Helipad & Food Court',
+                brochureContentKey: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80',
+                totalApartments: 2,
+                totalUnits: 6,
+                availableUnits: 4,
+                startingPrice: 32000000,
+                unitTypeOptions: ['Offices & Retail Suites'],
+                bhkOptions: ['Offices & Retail Suites'],
+                amenities: [
+                    {
+                        id: 'am-h1',
+                        name: 'High-Speed EV Bays',
+                        amenityType: 'EV Charging Bays',
+                        description: 'Dedicated high-speed electric vehicle charging stations across every bay.',
+                        photoContentKey: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80',
+                        displayOrder: 1,
+                        isFeatured: true
+                    },
+                    {
+                        id: 'am-h2',
+                        name: 'Executive Business Lounge',
+                        amenityType: 'Co-Working Space',
+                        description: 'Premium business lounges and private boardrooms with high-speed fiber connectivity.',
+                        photoContentKey: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+                        displayOrder: 2,
+                        isFeatured: true
+                    },
+                    {
+                        id: 'am-h3',
+                        name: '24/7 Smart Security',
+                        amenityType: '24/7 Smart Security',
+                        description: 'AI-assisted perimeter surveillance and biometric turnstile destination control.',
+                        photoContentKey: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
+                        displayOrder: 3,
+                        isFeatured: true
+                    }
+                ],
+                apartments: [
+                    {
+                        id: 'ph-h1',
+                        projectId: 'sample-01',
+                        name: 'North Corporate Tower',
+                        address: 'Plot 18, HITEC City Phase 2, Madhapur, Hyderabad',
+                        totalFloors: 24,
+                        constructionStatus: 'Completed',
+                        numberOfUnits: 3,
+                        availableUnits: 2,
+                        units: [
+                            {
+                                id: 'u-h101',
+                                unitNumber: 'NC-04-4A',
+                                bhk: 'Offices & Retail Suites',
+                                unitType: 'Corporate Office Suite',
+                                floor: 4,
+                                carpetArea: 2400,
+                                superBuiltUpArea: 3100,
+                                price: 32000000,
+                                facing: 'East',
+                                bathrooms: 2,
+                                parkingAvailable: true,
+                                possessionDate: '2026-12-31',
+                                status: 'Available'
+                            },
+                            {
+                                id: 'u-h102',
+                                unitNumber: 'NC-09-9A',
+                                bhk: 'Offices & Retail Suites',
+                                unitType: 'Executive Office Floor',
+                                floor: 9,
+                                carpetArea: 3800,
+                                superBuiltUpArea: 4900,
+                                price: 44000000,
+                                facing: 'North',
+                                bathrooms: 4,
+                                parkingAvailable: true,
+                                possessionDate: '2026-12-31',
+                                status: 'Available'
+                            }
+                        ]
+                    },
+                    {
+                        id: 'ph-h2',
+                        projectId: 'sample-01',
+                        name: 'Retail Galleria Wing',
+                        address: 'Galleria Plaza, HITEC City Phase 2, Madhapur, Hyderabad',
+                        totalFloors: 4,
+                        constructionStatus: 'Under Construction',
+                        numberOfUnits: 3,
+                        availableUnits: 2,
+                        units: [
+                            {
+                                id: 'u-h201',
+                                unitNumber: 'RG-00-GA',
+                                bhk: 'Offices & Retail Suites',
+                                unitType: 'High-Street Retail Showroom',
+                                floor: 0,
+                                carpetArea: 4200,
+                                superBuiltUpArea: 5400,
+                                price: 58000000,
+                                facing: 'East',
+                                bathrooms: 2,
+                                parkingAvailable: true,
+                                possessionDate: '2027-06-30',
+                                status: 'Available'
+                            }
+                        ]
+                    }
+                ]
+            };
+            if (this.project.apartments && this.project.apartments.length > 0) {
+                this.selectedApartmentId = this.project.apartments[0].id;
+            }
+            return;
+        }
+
+        // 2. Urban Palms Gated Villas (Villas, Bengaluru - Starting ₹ 2.65 Cr*)
+        if (idLower === 'sample-02' || idLower === 'proj-02' || idLower.includes('palm') || idLower.includes('villa')) {
+            this.project = {
+                id: 'sample-02',
+                name: 'Urban Palms Gated Villas',
+                projectType: 'Residential_Villa',
+                city: 'Bengaluru',
+                state: 'Karnataka',
+                status: 'Active',
+                startDate: '2025-01-15',
+                endDate: '2027-12-31',
+                publicDescription: 'An ultra-exclusive gated villa estate set within 40 acres of private forest reserve, featuring Spanish-Mediterranean architecture with private plunge pools.',
+                strengths: 'Private Temperature-Controlled Pools, 3-Car Covered Parking, 100% Vastu Compliant, 12-Acre Central Lake Park, Organic Kitchen Orchards',
+                brochureContentKey: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+                totalApartments: 2,
+                totalUnits: 6,
+                availableUnits: 3,
+                startingPrice: 26500000,
+                bhkOptions: ['3 BHK', '4 BHK', '5 BHK'],
+                amenities: [
+                    {
+                        id: 'am-p1',
+                        name: 'Private Landscaped Gardens',
+                        amenityType: 'Landscaped Gardens',
+                        description: 'Private 1,200 sq.ft lawn with Mediterranean pergolas and drip irrigation.',
+                        photoContentKey: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80',
+                        displayOrder: 1,
+                        isFeatured: true
+                    },
+                    {
+                        id: 'am-p2',
+                        name: 'Championship Tennis Court',
+                        amenityType: 'Sports & Courts',
+                        description: 'Floodlit synthetic acrylic surface with resident coaching clinics.',
+                        photoContentKey: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80',
+                        displayOrder: 2,
+                        isFeatured: true
+                    },
+                    {
+                        id: 'am-p3',
+                        name: 'Clubhouse & Spa',
+                        amenityType: 'Clubhouse',
+                        description: '30,000 sq.ft private estate club with heated indoor pool and holistic wellness center.',
+                        photoContentKey: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+                        displayOrder: 3,
+                        isFeatured: true
+                    }
+                ],
+                apartments: [
+                    {
+                        id: 'ph-p1',
+                        projectId: 'sample-02',
+                        name: 'Royal Palms Enclave',
+                        address: 'Palm Boulevard, Whitefield-Sarjapur Link Rd, Bengaluru',
+                        totalFloors: 2,
+                        constructionStatus: 'Under Construction',
+                        numberOfUnits: 3,
+                        availableUnits: 2,
+                        units: [
+                            {
+                                id: 'u-p101',
+                                unitNumber: 'Palm Villa 07',
+                                bhk: '3 BHK',
+                                recordTypeName: 'Villa_Unit',
+                                floor: 2,
+                                plotArea: 2400,
+                                carpetArea: 2750,
+                                superBuiltUpArea: 3200,
+                                price: 26500000,
+                                facing: 'East',
+                                bathrooms: 4,
+                                parkingAvailable: true,
+                                possessionDate: '2027-08-31',
+                                status: 'Available'
+                            },
+                            {
+                                id: 'u-p102',
+                                unitNumber: 'Palm Villa 12',
+                                bhk: '4 BHK',
+                                recordTypeName: 'Villa_Unit',
+                                floor: 2,
+                                plotArea: 3600,
+                                carpetArea: 4100,
+                                superBuiltUpArea: 4750,
+                                price: 42000000,
+                                facing: 'North-East',
+                                bathrooms: 5,
+                                parkingAvailable: true,
+                                possessionDate: '2027-10-31',
+                                status: 'Available'
+                            }
+                        ]
+                    }
+                ]
+            };
+            if (this.project.apartments && this.project.apartments.length > 0) {
+                this.selectedApartmentId = this.project.apartments[0].id;
+            }
+            return;
+        }
+
+        // 3. Urban Serenity (Apartments, Chennai - Starting ₹ 78.00 Lacs*)
         this.project = {
-            id: 'sample-01',
+            id: 'sample-03',
             name: 'Urban Serenity',
             city: 'Chennai',
             state: 'Tamil Nadu',
@@ -295,12 +519,12 @@ export default class UnProjectDetailsPage extends LightningElement {
             endDate: '2027-12-31',
             publicDescription: 'Urban Serenity represents the pinnacle of contemporary high-rise residential architecture on the OMR IT Corridor. Spanning 7.5 lush acres with 78% open green expanses, it features high ceilings, oversized balconies, and IGBC Gold rated eco-amenities.',
             strengths: 'Olympic Infinity Pool, 25,000 sq.ft. Clubhouse, EV Fast Charging at Every Bay, IGBC Gold Certified, 300m from Upcoming Metro Station',
-            brochureContentKey: 'MCK_SERENITY_SAMPLE',
+            brochureContentKey: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80',
             totalApartments: 2,
             totalUnits: 8,
             availableUnits: 3,
-            startingPrice: 8500000,
-            bhkOptions: ['1 BHK', '2 BHK', '3 BHK'],
+            startingPrice: 7800000,
+            bhkOptions: ['2 BHK', '3 BHK', '4 BHK'],
             amenities: [
                 {
                     id: 'am-01',
@@ -333,7 +557,7 @@ export default class UnProjectDetailsPage extends LightningElement {
             apartments: [
                 {
                     id: 'apt-01',
-                    projectId: 'sample-01',
+                    projectId: 'sample-03',
                     name: 'Tower Azure (Block A)',
                     address: 'Wing 1, 100 OMR Expressway, Navalur, Chennai',
                     totalFloors: 14,
@@ -343,11 +567,13 @@ export default class UnProjectDetailsPage extends LightningElement {
                     units: [
                         {
                             id: 'u-101',
-                            unitNumber: 'Flat 101',
+                            unitNumber: 'Azure 201',
                             bhk: '2 BHK',
-                            floor: 1,
-                            area: 1250,
-                            price: 8500000,
+                            floor: 2,
+                            area: 1180,
+                            carpetArea: 1180,
+                            superBuiltUpArea: 1420,
+                            price: 7800000,
                             facing: 'East',
                             bathrooms: 2,
                             parkingAvailable: true,
@@ -356,79 +582,17 @@ export default class UnProjectDetailsPage extends LightningElement {
                         },
                         {
                             id: 'u-102',
-                            unitNumber: 'Flat 102',
+                            unitNumber: 'Azure 601',
                             bhk: '3 BHK',
-                            floor: 1,
-                            area: 1780,
-                            price: 12200000,
-                            facing: 'North',
-                            bathrooms: 3,
-                            parkingAvailable: true,
-                            possessionDate: '2027-06-30',
-                            status: 'Under Offer'
-                        },
-                        {
-                            id: 'u-201',
-                            unitNumber: 'Flat 201',
-                            bhk: '2 BHK',
-                            floor: 2,
-                            area: 1250,
-                            price: 8700000,
-                            facing: 'East',
-                            bathrooms: 2,
-                            parkingAvailable: true,
-                            possessionDate: '2027-06-30',
-                            status: 'Available'
-                        },
-                        {
-                            id: 'u-301',
-                            unitNumber: 'Flat 301',
-                            bhk: '3 BHK',
-                            floor: 3,
-                            area: 1850,
-                            price: 13500000,
+                            floor: 6,
+                            area: 1680,
+                            carpetArea: 1680,
+                            superBuiltUpArea: 2050,
+                            price: 12500000,
                             facing: 'North-East',
                             bathrooms: 3,
                             parkingAvailable: true,
                             possessionDate: '2027-06-30',
-                            status: 'Under Offer'
-                        }
-                    ]
-                },
-                {
-                    id: 'apt-02',
-                    projectId: 'sample-01',
-                    name: 'Tower Beryl (Block B)',
-                    address: 'Wing 2, 100 OMR Expressway, Navalur, Chennai',
-                    totalFloors: 10,
-                    constructionStatus: 'Not Started',
-                    numberOfUnits: 4,
-                    availableUnits: 1,
-                    units: [
-                        {
-                            id: 'u-501',
-                            unitNumber: 'Flat 501',
-                            bhk: '1 BHK',
-                            floor: 5,
-                            area: 680,
-                            price: 4900000,
-                            facing: 'East',
-                            bathrooms: 1,
-                            parkingAvailable: false,
-                            possessionDate: '2028-03-31',
-                            status: 'Available'
-                        },
-                        {
-                            id: 'u-502',
-                            unitNumber: 'Flat 502',
-                            bhk: '2 BHK',
-                            floor: 5,
-                            area: 1190,
-                            price: 8200000,
-                            facing: 'West',
-                            bathrooms: 2,
-                            parkingAvailable: true,
-                            possessionDate: '2028-03-31',
                             status: 'Under Offer'
                         }
                     ]

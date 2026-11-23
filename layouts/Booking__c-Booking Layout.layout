@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <excludeButtons>GenerateKnowledge</excludeButtons>
+    <excludeButtons>OpenSlackRecordChannel</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
         <detailHeading>false</detailHeading>
@@ -128,11 +130,12 @@
     </layoutSections>
     <relatedLists>
         <fields>NAME</fields>
+        <fields>Receipt_URL__c</fields>
         <fields>Amount__c</fields>
+        <fields>Status__c</fields>
         <fields>Payment_Date__c</fields>
         <fields>Payment_Type__c</fields>
         <fields>Payment_Mode__c</fields>
-        <fields>Status__c</fields>
         <fields>Gateway_Payment_ID__c</fields>
         <relatedList>Payment__c.Booking__c</relatedList>
     </relatedLists>
@@ -150,4 +153,10 @@
     <showInteractionLogPanel>false</showInteractionLogPanel>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
+    <summaryLayout>
+        <masterLabel>00hC400000457ue</masterLabel>
+        <sizeX>4</sizeX>
+        <sizeY>0</sizeY>
+        <summaryLayoutStyle>Default</summaryLayoutStyle>
+    </summaryLayout>
 </Layout>

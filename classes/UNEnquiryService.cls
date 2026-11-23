@@ -51,10 +51,12 @@ public without sharing class UNEnquiryService {
 
         // Query Project Name for readable logging if ProjectId is provided
         String projectName = 'General UrbanNest Enquiry';
+        String projectCity = '';
         if (input.projectId != null) {
-            List<Project__c> matchedProjects = [SELECT Name FROM Project__c WHERE Id = :input.projectId LIMIT 1];
+            List<Project__c> matchedProjects = [SELECT Name, City__c FROM Project__c WHERE Id = :input.projectId LIMIT 1];
             if (!matchedProjects.isEmpty()) {
                 projectName = matchedProjects[0].Name;
+                projectCity = matchedProjects[0].City__c;
             }
         }
 
@@ -76,7 +78,9 @@ public without sharing class UNEnquiryService {
         Lead newLead = new Lead();
         newLead.LastName = extractLastName(input.fullName);
         newLead.FirstName = extractFirstName(input.fullName);
-        String location = String.isNotBlank(input.locationPreference) ? input.locationPreference.trim().abbreviate(100) : 'Chennai';
+        String location = String.isNotBlank(input.locationPreference) 
+            ? input.locationPreference.trim().abbreviate(100) 
+            : (String.isNotBlank(projectCity) ? projectCity : 'Chennai');
         newLead.Company = location;
         newLead.Location_Preference__c = location;
         newLead.LeadSource = DEFAULT_LEAD_SOURCE;
@@ -94,6 +98,7 @@ public without sharing class UNEnquiryService {
         try {
             Database.DMLOptions dml = new Database.DMLOptions();
             dml.duplicateRuleHeader.allowSave = true;
+            dml.assignmentRuleHeader.useDefaultRule = true;
             Database.insert(newLead, dml);
 
             if (input.campaignId != null) {
@@ -125,7 +130,8 @@ public without sharing class UNEnquiryService {
                 return [
                     SELECT Id, OwnerId, Name, Email, Phone, Preferred_Project__c 
                     FROM Lead 
-                    WHERE Preferred_Project__c = :projectId
+                    WHERE IsConverted = false
+                      AND Preferred_Project__c = :projectId
                       AND ((Normalized_Phone__c = :normPhone AND Normalized_Phone__c != NULL) 
                         OR (Normalized_Email__c = :normEmail AND Normalized_Email__c != NULL)
                         OR (Phone = :normPhone AND Phone != NULL)
@@ -137,7 +143,8 @@ public without sharing class UNEnquiryService {
                 return [
                     SELECT Id, OwnerId, Name, Email, Phone, Preferred_Project__c 
                     FROM Lead 
-                    WHERE Preferred_Project__c = :projectId
+                    WHERE IsConverted = false
+                      AND Preferred_Project__c = :projectId
                       AND ((Normalized_Phone__c = :normPhone AND Normalized_Phone__c != NULL)
                         OR (Phone = :normPhone AND Phone != NULL))
                     ORDER BY CreatedDate DESC 
@@ -147,7 +154,8 @@ public without sharing class UNEnquiryService {
                 return [
                     SELECT Id, OwnerId, Name, Email, Phone, Preferred_Project__c 
                     FROM Lead 
-                    WHERE Preferred_Project__c = :projectId
+                    WHERE IsConverted = false
+                      AND Preferred_Project__c = :projectId
                       AND ((Normalized_Email__c = :normEmail AND Normalized_Email__c != NULL)
                         OR (Email = :normEmail AND Email != NULL))
                     ORDER BY CreatedDate DESC 
@@ -160,7 +168,8 @@ public without sharing class UNEnquiryService {
                 return [
                     SELECT Id, OwnerId, Name, Email, Phone, Preferred_Project__c 
                     FROM Lead 
-                    WHERE Preferred_Project__c = NULL
+                    WHERE IsConverted = false
+                      AND Preferred_Project__c = NULL
                       AND ((Normalized_Phone__c = :normPhone AND Normalized_Phone__c != NULL) 
                         OR (Normalized_Email__c = :normEmail AND Normalized_Email__c != NULL)
                         OR (Phone = :normPhone AND Phone != NULL)
@@ -172,7 +181,8 @@ public without sharing class UNEnquiryService {
                 return [
                     SELECT Id, OwnerId, Name, Email, Phone, Preferred_Project__c 
                     FROM Lead 
-                    WHERE Preferred_Project__c = NULL
+                    WHERE IsConverted = false
+                      AND Preferred_Project__c = NULL
                       AND ((Normalized_Phone__c = :normPhone AND Normalized_Phone__c != NULL)
                         OR (Phone = :normPhone AND Phone != NULL))
                     ORDER BY CreatedDate DESC 
@@ -182,7 +192,8 @@ public without sharing class UNEnquiryService {
                 return [
                     SELECT Id, OwnerId, Name, Email, Phone, Preferred_Project__c 
                     FROM Lead 
-                    WHERE Preferred_Project__c = NULL
+                    WHERE IsConverted = false
+                      AND Preferred_Project__c = NULL
                       AND ((Normalized_Email__c = :normEmail AND Normalized_Email__c != NULL)
                         OR (Email = :normEmail AND Email != NULL))
                     ORDER BY CreatedDate DESC 

@@ -87,6 +87,17 @@ export default class UnEnquiryForm extends LightningElement {
         this.initPreselectedFields();
     }
 
+    renderedCallback() {
+        const projSelect = this.template.querySelector('#enquiry-project');
+        if (projSelect && this.selectedProjectId && projSelect.value !== this.selectedProjectId) {
+            projSelect.value = this.selectedProjectId;
+        }
+        const bhkSelect = this.template.querySelector('#enquiry-bhk');
+        if (bhkSelect && this.bhkPreference && bhkSelect.value !== this.bhkPreference) {
+            bhkSelect.value = this.bhkPreference;
+        }
+    }
+
     extractUrlParameters() {
         try {
             if (typeof window !== 'undefined' && window.location && window.location.search) {
@@ -114,9 +125,10 @@ export default class UnEnquiryForm extends LightningElement {
     wiredProjects({ data, error }) {
         if (data) {
             this.serverProjects = data.map(p => ({
-                label: `${p.name} (${p.city})`,
+                label: p.city ? `${p.name} (${p.city})` : p.name,
                 value: p.id,
-                name: p.name
+                name: p.name,
+                city: p.city
             }));
             this.rebuildProjectOptions();
         }
@@ -128,23 +140,29 @@ export default class UnEnquiryForm extends LightningElement {
         const targetName = this._preselectedProjectName;
 
         let matched = false;
+        let matchedCity = '';
 
         // Try to match by Id
         if (targetId) {
             const foundById = opts.find(o => o.value === targetId);
             if (foundById) {
                 this.selectedProjectId = foundById.value;
+                matchedCity = foundById.city;
                 matched = true;
             }
         }
 
-        // Try to match by Project Name
+        // Try to match by Project Name (exact or case-insensitive substring)
         if (!matched && targetName) {
-            const foundByName = opts.find(o => 
-                o.name && o.name.toLowerCase() === targetName.toLowerCase()
-            );
+            const targetLower = targetName.toLowerCase();
+            const foundByName = opts.find(o => {
+                if (!o.name) return false;
+                const oLower = o.name.toLowerCase();
+                return oLower === targetLower || targetLower.includes(oLower) || oLower.includes(targetLower);
+            });
             if (foundByName) {
                 this.selectedProjectId = foundByName.value;
+                matchedCity = foundByName.city;
                 matched = true;
             }
         }
@@ -155,12 +173,20 @@ export default class UnEnquiryForm extends LightningElement {
             if (!isGeneral) {
                 const label = targetName || 'Selected Project';
                 const value = targetId || targetName;
-                opts = [{ label: label, value: value }, ...opts];
+                opts = [{ label: label, value: value, name: targetName }, ...opts];
                 this.selectedProjectId = value;
             }
         }
 
-        this.projectOptions = opts;
+        this.projectOptions = opts.map(o => ({
+            ...o,
+            isSelected: String(o.value) === String(this.selectedProjectId)
+        }));
+
+        // Auto-fill location preference from matched project city if locationPreference is empty
+        if (matchedCity && !this.locationPreference) {
+            this.locationPreference = matchedCity;
+        }
 
         // Sync BHK and Budget if not already set
         if (this._preselectedBhk && !this.bhkPreference) {
@@ -184,13 +210,17 @@ export default class UnEnquiryForm extends LightningElement {
         ];
 
         const current = this.bhkPreference || this._preselectedBhk;
+        let list = standard;
         if (current && !standard.some(o => o.value === current)) {
-            return [
+            list = [
                 ...standard,
                 { label: current, value: current }
             ];
         }
-        return standard;
+        return list.map(o => ({
+            ...o,
+            isSelected: o.value === current
+        }));
     }
 
     get computedFormTitle() {
@@ -227,13 +257,7 @@ export default class UnEnquiryForm extends LightningElement {
     }
 
     get isProjectLocked() {
-        if (!this.selectedProjectId && !this._preselectedProjectId && !this._preselectedProjectName) {
-            return false;
-        }
-        if (this._preselectedProjectName === 'General UrbanNest Consultation' || this._preselectedProjectName === 'General Project Consultation') {
-            return false;
-        }
-        return Boolean(this._preselectedProjectId || this._preselectedProjectName);
+        return false;
     }
 
     get containerClass() {
@@ -286,6 +310,11 @@ export default class UnEnquiryForm extends LightningElement {
 
     handleProjectChange(e) {
         this.selectedProjectId = e.target.value;
+        const matched = this.serverProjects.find(p => p.value === this.selectedProjectId);
+        if (matched && matched.city && !this.locationPreference) {
+            this.locationPreference = matched.city;
+            this.clearFieldError('locationPreference');
+        }
     }
 
     handleBhkChange(e) {

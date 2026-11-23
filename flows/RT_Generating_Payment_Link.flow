@@ -49,7 +49,7 @@
         <inputParameters>
             <name>phone</name>
             <value>
-                <elementReference>Get_Name_Phone_and_Email.MobilePhone</elementReference>
+                <elementReference>Get_Name_Phone_and_Email.Phone</elementReference>
                 <inputConfiguratorMode>Resource</inputConfiguratorMode>
             </value>
         </inputParameters>
@@ -112,7 +112,7 @@
         <inputParameters>
             <name>phone</name>
             <value>
-                <elementReference>Get_Name_Phone_and_Email.MobilePhone</elementReference>
+                <elementReference>Get_Name_Phone_and_Email.Phone</elementReference>
                 <inputConfiguratorMode>Resource</inputConfiguratorMode>
             </value>
         </inputParameters>
@@ -252,11 +252,10 @@
     <formulas>
         <name>For_UpdatingBookingStatus</name>
         <dataType>String</dataType>
-        <expression>IF(
-    OR(
-        ISBLANK({!$Record.Total_Paid_Amount__c}),
-        {!$Record.Total_Paid_Amount__c} = 0
-    ),
+        <expression>CASE(
+    TEXT({!$Record.Balance_Due__c}),
+    &quot;0&quot;, &quot;Sale Agreement Executed&quot;,
+    TEXT({!$Record.Total_Paid_Amount__c}),
     &quot;Token Received&quot;,
     &quot;Sale Agreement Executed&quot;
 )</expression>
