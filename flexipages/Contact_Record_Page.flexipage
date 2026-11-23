@@ -619,6 +619,16 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
+                    <name>phoneField</name>
+                    <value>Phone</value>
+                </componentInstanceProperties>
+                <componentName>chatComponent</componentName>
+                <identifier>c_chatComponent</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
                     <name>label</name>
                     <value>Tabs</value>
                 </componentInstanceProperties>

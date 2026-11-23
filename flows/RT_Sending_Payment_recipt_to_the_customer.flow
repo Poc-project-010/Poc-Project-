@@ -118,11 +118,11 @@
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Obsolete</status>
+    <status>Active</status>
     <textTemplates>
         <name>TT_PaymentRecipt</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>Hi {!Get_Contact_Details.Name}, we have received your payment of Rs. {!Get_Booking_Details.Total_Paid_Amount__c}.
+        <text>Hi {!Get_Contact_Details.Name}, we have received your payment of Rs. 500000.
 Receipt No : {!$Record.Name}
 Payment ID : {!$Record.Id}
 Date : {!$Record.Payment_Date__c}

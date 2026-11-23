@@ -92,12 +92,10 @@
                         <select
                             id="enquiry-project"
                             class="un-input"
-                            value={selectedProjectId}
-                            onchange={handleProjectChange}
-                            disabled={isProjectLocked}>
+                            onchange={handleProjectChange}>
                             <option value="">Select a Project (Optional)</option>
                             <template for:each={projectOptions} for:item="opt">
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                <option key={opt.value} value={opt.value} selected={opt.isSelected}>{opt.label}</option>
                             </template>
                         </select>
                     </div>
@@ -107,9 +105,9 @@
                 <div class="un-form-row">
                     <div class="un-form-group">
                         <label for="enquiry-bhk" class="un-label">Configuration Preference</label>
-                        <select id="enquiry-bhk" class="un-input" value={bhkPreference} onchange={handleBhkChange}>
+                        <select id="enquiry-bhk" class="un-input" onchange={handleBhkChange}>
                             <template for:each={bhkOptions} for:item="opt">
-                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                <option key={opt.value} value={opt.value} selected={opt.isSelected}>{opt.label}</option>
                             </template>
                         </select>
                     </div>

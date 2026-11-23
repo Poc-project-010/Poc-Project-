@@ -320,6 +320,7 @@ public inherited sharing class UNProjectService {
             SELECT Id, BHK__c, Unit_Type__c, Price__c, Status__c, Phase__r.Project__c
             FROM Property_Unit__c
             WHERE Phase__r.Project__c IN :projectIds
+              AND Status__c IN ('Available', 'Under Offer')
         ]) {
             Id pId = u.Phase__r.Project__c;
 

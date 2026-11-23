@@ -51,4 +51,9 @@
         <default>false</default>
         <label>Website</label>
     </standardValue>
+    <standardValue>
+        <fullName>Instagram lead</fullName>
+        <default>false</default>
+        <label>Instagram lead</label>
+    </standardValue>
 </StandardValueSet>

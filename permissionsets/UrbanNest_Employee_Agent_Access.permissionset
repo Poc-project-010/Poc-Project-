@@ -4,6 +4,14 @@
         <agentName>UrbanNest_Employee_Agent</agentName>
         <enabled>true</enabled>
     </agentAccesses>
+    <agentAccesses>
+        <agentName>UrbanNest_Smart_Site_Visit_Agent</agentName>
+        <enabled>true</enabled>
+    </agentAccesses>
+    <agentAccesses>
+        <agentName>Vehicle_Booking_Management</agentName>
+        <enabled>true</enabled>
+    </agentAccesses>
     <description>Grants employees access to the UrbanNest Agentforce Employee Agent.</description>
     <fieldPermissions>
         <editable>true</editable>
